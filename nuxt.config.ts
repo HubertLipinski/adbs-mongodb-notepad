@@ -2,17 +2,21 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@sidebase/nuxt-auth'],
+  modules: ['@nuxt/eslint', '@sidebase/nuxt-auth', '@nuxt/ui'],
   ssr: false,
 
+  css: ['~/assets/css/main.css'],
+
   runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI
+    mongodbUri: process.env.MONGODB_URI,
+    authSecret : process.env.AUTH_SECRET,
   },
 
   auth: {
-    baseURL: process.env.AUTH_ORIGIN,
+    globalAppMiddleware: true,
     provider: {
-      type: 'authjs'
+      type: 'authjs',
+      addDefaultCallbackUrl: false
     }
   }
 })
