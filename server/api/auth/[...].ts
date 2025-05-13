@@ -14,6 +14,8 @@ export default NuxtAuthHandler({
         signIn: '/login',
     },
 
+    // todo: refactor
+
     providers: [
         CredentialsProvider.default({
             name: 'credentials',
