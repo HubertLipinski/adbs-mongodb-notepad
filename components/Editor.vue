@@ -5,6 +5,7 @@ import Paragraph from '@editorjs/paragraph'
 import LinkTool from '@editorjs/link'
 import List from '@editorjs/list'
 import Table from '@editorjs/table'
+import Marker from '@editorjs/marker'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const htmlelement = ref(null)
@@ -54,15 +55,15 @@ function viewToModel(_, event) {
 onMounted(() => {
   editor = new EditorJS({
     holder: htmlelement.value,
-    placeholder: props.placeholder,
+    placeholder: props.placeholder || 'Press / to see all available commands.',
     tools: {
       header: {
         class: Header,
         config: {
           placeholder: 'Enter a header',
-          levels: [1, 2, 3, 4, 5, 6],
-          defaultLevel: 3,
-          placeholder: 'Type here...',
+          levels: [1, 2, 3, 4, 5],
+          defaultLevel: 2,
+          placeholder: 'Type here',
         },
         inlineToolbar: true,
       },
@@ -98,9 +99,9 @@ onMounted(() => {
         class: List,
         inlineToolbar: true,
       },
+      marker: Marker,
     },
     readOnly: props.readOnly,
-    // minHeight: 'auto',
     data: props.modelValue,
     onReady: modelToView,
     onChange: viewToModel,
