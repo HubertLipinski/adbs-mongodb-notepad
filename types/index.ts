@@ -1,16 +1,16 @@
-import type {Types} from 'mongoose';
+import type { Types } from 'mongoose'
 
 export interface Note {
-  _id: Types.ObjectId,
-  title: string,
+  _id: Types.ObjectId
+  title: string
   tags: string[]
-  content: object[], // TODO
+  content: object[] // TODO
   location: GeoJSON
-  createdAt: Date,
+  createdAt: Date
   updatedAt: Date
 }
 
 interface GeoJSON {
-  type: 'Point',
-  coordinates: [number, number], // [longitude, latitude]
+  type: 'Point'
+  coordinates: [number, number] // [longitude, latitude]
 }

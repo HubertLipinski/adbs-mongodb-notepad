@@ -1,11 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-  auth: false
+  layout: 'auth',
 })
 </script>
 
 <template>
-  <LoginForm />
+  <AuthLoginForm />
 </template>
 
 <style scoped>

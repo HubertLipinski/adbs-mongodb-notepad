@@ -1,11 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-  auth: false
+  layout: 'auth',
 })
 </script>
 
 <template>
-  <RegisterForm/>
+  <AuthRegisterForm />
 </template>
 
 <style scoped>
