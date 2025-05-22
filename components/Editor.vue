@@ -105,7 +105,7 @@ onMounted(() => {
     data: props.modelValue,
     onReady: modelToView,
     onChange: viewToModel,
-    autofocus: true,
+    autofocus: false,
   })
 })
 

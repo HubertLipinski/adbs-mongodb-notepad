@@ -1,21 +1,30 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+const route = useRoute()
+
+console.log()
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 const items = ref<NavigationMenuItem[][]>([
   [
     {
       label: 'My Notes',
       icon: 'i-lucide-book-open',
+      active: route.path.includes('/notes'),
+      to: '/notes',
       defaultOpen: true,
-      slot: 'notes' as const,
       children: [
         {
           label: 'New note',
           icon: 'i-lucide-plus',
+          to: '/notes'
         },
         {
           label: 'My note 1',
           icon: 'i-lucide-file-text',
+          to: '/notes/123/edit',
         },
       ],
     },
@@ -23,6 +32,7 @@ const items = ref<NavigationMenuItem[][]>([
       label: 'Tags',
       icon: 'i-lucide-tags',
       slot: 'tags' as const,
+      active: route.path.includes('/tags'),
       children: [
         {
           label: 'New tag',
@@ -93,9 +103,5 @@ const items = ref<NavigationMenuItem[][]>([
     orientation="vertical"
     :items="items"
     class="data-[orientation=vertical]:w-full"
-  >
-    <!-- <template #notes-leading>
-      <UBadge variant="outline">20</UBadge>
-    </template> -->
-  </UNavigationMenu>
+  />
 </template>
