@@ -1,7 +1,7 @@
 import { model, Schema, type Document } from 'mongoose'
 
 export interface UserDocument extends Document {
-  name: string
+  username: string
   email: string
   password: string
   createdAt: Date
@@ -9,7 +9,8 @@ export interface UserDocument extends Document {
 }
 
 const UserSchema = new Schema({
-  name: { type: String, required: true, unique: true, trim: true, lowercase: true },
+  _id: { type: Schema.Types.ObjectId, ref: 'User' },
+  username: { type: String, required: true, unique: true, trim: true, lowercase: true },
   email: { type: String, unique: true, required: true, lowercase: true, trim: true },
   password: { type: String, required: true, trim: true, length: [8, 'Password must be at least 8 characters'] },
 }, { timestamps: true })

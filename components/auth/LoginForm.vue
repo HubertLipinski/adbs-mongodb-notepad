@@ -2,6 +2,8 @@
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
+const { signIn } = useAuth()
+
 const schema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Must be at least 8 characters'),
@@ -16,9 +18,26 @@ const state = reactive<Partial<Schema>>({
 
 const toast = useToast()
 
+const isLoading = ref(false)
+const errorMessage = ref<null | string>(null)
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
-  console.log(event.data)
+  isLoading.value = true
+  errorMessage.value = null
+  const result = await signIn('credentials', {
+    redirect: false,
+    email: event.data.email,
+    password: event.data.password,
+  })
+
+  if (result?.error) {
+    errorMessage.value = result?.error
+  }
+  else {
+    toast.add({ title: 'Success', description: 'You are logged in!', color: 'success' })
+    navigateTo('/')
+  }
+
+  isLoading.value = false
 }
 </script>
 
@@ -27,7 +46,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     :schema="schema"
     :state="state"
     class="space-y-4 w-sm"
-    @submit="onSubmit"
+    @submit.prevent="onSubmit"
   >
     <h1 class="text-2xl font-semibold py-4">
       Login
@@ -54,7 +73,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       />
     </UFormField>
 
-    <UButton type="submit">
+    <UAlert
+      v-if="errorMessage"
+      color="error"
+      :title="errorMessage"
+    />
+
+    <UButton
+      type="submit"
+      :disabled="isLoading"
+    >
       Login
     </UButton>
 

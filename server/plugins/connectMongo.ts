@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
 
 export default defineNitroPlugin(async () => {
-  return
-
   const config = useRuntimeConfig()
 
   if (!config.mongodbUri) {
@@ -12,6 +10,11 @@ export default defineNitroPlugin(async () => {
     return
   }
   try {
+    if (mongoose.connection.readyState >= 1) {
+      console.info('Mongodb already connected')
+      return
+    }
+
     await mongoose.connect(config.mongodbUri)
     console.info('Mongodb connected')
   }

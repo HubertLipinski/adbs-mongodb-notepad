@@ -19,7 +19,7 @@ const items = ref<NavigationMenuItem[][]>([
         {
           label: 'New note',
           icon: 'i-lucide-plus',
-          to: '/notes'
+          to: '/notes',
         },
         {
           label: 'My note 1',

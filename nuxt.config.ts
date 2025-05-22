@@ -16,17 +16,23 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-11-01',
 
-  // auth: {
-  //   globalAppMiddleware: true,
-  //   provider: {
-  //     type: 'authjs',
-  //     addDefaultCallbackUrl: false
-  //   }
-  // }
-
   vite: {
     optimizeDeps: {
       include: ['@editorjs/editorjs'],
+    },
+  },
+
+  auth: {
+    isEnabled: true,
+    globalAppMiddleware: true,
+    auth: {
+      provider: {
+        type: 'local',
+        endpoints: {
+          signIn: { path: '/login', method: 'post' },
+          signOut: { path: '/logout', method: 'post' },
+        },
+      },
     },
   },
 

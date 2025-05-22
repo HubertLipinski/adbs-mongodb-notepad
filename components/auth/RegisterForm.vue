@@ -24,12 +24,38 @@ const state = reactive<Partial<Schema>>({
 })
 
 const toast = useToast()
+const { signIn } = useAuth()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const result = schema.safeParse(event)
-  console.log(result)
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
-  console.log(event.data)
+  const res = await $fetch('/api/auth/register', {
+    method: 'POST',
+    body: {
+      username: event.data.username,
+      email: event.data.email,
+      password: event.data.password,
+    },
+  }).catch((err) => {
+    toast.add({
+      title: 'Registration failed',
+      description: err?.data?.statusMessage || 'Unknown error',
+      color: 'red',
+    })
+  })
+
+  if (res?.success) {
+    toast.add({
+      title: 'Registration successful',
+      description: 'You can now log in',
+      color: 'green',
+    })
+
+    await signIn('credentials', {
+      redirect: true,
+      email: event.data.email,
+      password: event.data.password,
+      callbackUrl: '/',
+    })
+  }
 }
 </script>
 

@@ -1,11 +1,17 @@
 <script setup lang="ts">
+const { data, status, signOut } = useAuth()
 </script>
 
 <template>
   <section class="flex flex-col justify-center grow-1 items-center gap-16">
     <h1 class="text-3xl">
-      Welcome back, `USERNAME`
+      Welcome back, {{ data }}
     </h1>
+
+    <UButton
+      label="Wyloguj"
+      @click="async () => await signOut()"
+    />
 
     <UButton
       label="Button"
