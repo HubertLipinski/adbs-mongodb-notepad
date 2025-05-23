@@ -9,7 +9,7 @@ const { data, status, signOut } = useAuth()
     </h1>
 
     <UButton
-      label="Wyloguj"
+      label="Logout"
       @click="async () => await signOut()"
     />
 
