@@ -3,7 +3,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 
-console.log()
+const { signOut } = useAuth()
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -89,10 +89,17 @@ const items = ref<NavigationMenuItem[][]>([
       ],
     },
     {
+      label: 'Logout',
+      icon: 'i-lucide-log-out',
+      class: 'mt-4',
+      onClick: () => signOut(),
+    },
+    {
       label: 'GitHub',
       icon: 'i-simple-icons-github',
       to: 'https://github.com/HubertLipinski/adbs-mongodb-notepad',
       target: '_blank',
+      class: 'mt-4',
     },
   ],
 ])

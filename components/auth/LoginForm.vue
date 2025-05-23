@@ -82,6 +82,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UButton
       type="submit"
       :disabled="isLoading"
+      :loading="isLoading"
     >
       Login
     </UButton>

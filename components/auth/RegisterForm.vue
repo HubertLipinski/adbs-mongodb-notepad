@@ -25,8 +25,9 @@ const state = reactive<Partial<Schema>>({
 
 const toast = useToast()
 const { signIn } = useAuth()
-
+const isLoading = ref(false)
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  isLoading.value = true
   const res = await $fetch('/api/auth/register', {
     method: 'POST',
     body: {
@@ -41,6 +42,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: 'red',
     })
   })
+
+  isLoading.value = false
 
   if (res?.success) {
     toast.add({
@@ -112,7 +115,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       />
     </UFormField>
 
-    <UButton type="submit">
+    <UButton
+      type="submit"
+      :disabled="isLoading"
+      :loading="isLoading"
+    >
       Register
     </UButton>
 
