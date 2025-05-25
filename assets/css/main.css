@@ -27,4 +27,12 @@
   .ce-block a {
     color: var(--color-primary)
   }
+
+  .ce-block__content, .ce-toolbar__content {
+    max-width:calc(100% - 30px) !important;
+  }
+
+  .cdx-block {
+    max-width: 100% !important;
+  }
 }
