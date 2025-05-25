@@ -1,18 +1,12 @@
 <script setup lang="ts">
 // TODO: get user note content from api
 
-const data = {
-  time: new Date().getTime(),
-  blocks: [
-    { type: 'header', data: { text: null, level: 1 } },
-    {
-      type: 'paragraph',
-      data: { text: 'Edit this content! Tip: Press / to see all available commands adn select text to see toolbox' },
-    },
-  ],
-}
+const route = useRoute()
 
-const defaultData = ref(data)
+const store = useNotesStore()
+const { notes } = storeToRefs(store)
+
+const userNote = notes.value.find(el => el._id === route.params.id)
 </script>
 
 <template>
@@ -20,16 +14,19 @@ const defaultData = ref(data)
     <section class="w-full max-w-full">
       <!-- TODO: TAGS and GEOLOCATION -->
       <!-- TODO: capture ctrl+s to save and add controls on top of the page to save -->
-
+      {{ userNote }}
       <UContainer class="min-h-full gap-8">
         <div class="w-full pt-4 pb-8 flex flex-row justify-between">
           <div class="flex gap-6">
             <UInput
+              v-model="userNote.title"
               color="neutral"
-              size="lg"
+              size="xl"
               placeholder="Untitled Note"
-              autofocus
-              class="w-xl"
+              :autofocus="true"
+              class="w-md"
+              variant="ghost"
+              icon="i-lucide-file-text"
             />
           </div>
           <div class="flex gap-4">
@@ -45,13 +42,9 @@ const defaultData = ref(data)
             />
           </div>
         </div>
-        <div>
-          <p>Last modified: {{ new Date().toLocaleTimeString() }}</p>
-        </div>
         <Editor
-          :autofocus="true"
-          :model-value="defaultData"
-          @update:model-value="($event) => defaultData = $event"
+          :model-value="userNote.content"
+          @update:model-value="($event) => userNote.content = $event"
         />
       </UContainer>
     </section>

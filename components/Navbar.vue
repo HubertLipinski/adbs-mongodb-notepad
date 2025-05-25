@@ -5,6 +5,25 @@ const route = useRoute()
 
 const { signOut } = useAuth()
 
+const store = useNotesStore()
+const { notes } = storeToRefs(store)
+
+await store.fetchNotes()
+
+const userMenu = computed(() => {
+  const menu = [{
+    label: 'New note',
+    icon: 'i-lucide-plus',
+    onClick: async () => store.createNewNote(),
+  }]
+  notes.value.forEach(note => menu.push({
+    label: note.title,
+    icon: 'i-lucide-file-text',
+    to: `/notes/${note._id}/edit`,
+  }))
+  return menu
+})
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 const items = ref<NavigationMenuItem[][]>([
@@ -15,18 +34,7 @@ const items = ref<NavigationMenuItem[][]>([
       active: route.path.includes('/notes'),
       to: '/notes',
       defaultOpen: true,
-      children: [
-        {
-          label: 'New note',
-          icon: 'i-lucide-plus',
-          to: '/notes',
-        },
-        {
-          label: 'My note 1',
-          icon: 'i-lucide-file-text',
-          to: '/notes/123/edit',
-        },
-      ],
+      children: userMenu,
     },
     {
       label: 'Tags',
@@ -41,50 +49,6 @@ const items = ref<NavigationMenuItem[][]>([
         {
           label: 'Custom tag',
           icon: 'i-lucide-tag',
-        },
-      ],
-    },
-    {
-      label: 'Components',
-      icon: 'i-lucide-box',
-      to: '/components',
-      slot: 'components' as const,
-      children: [
-        {
-          label: 'Link',
-          icon: 'i-lucide-file-text',
-          description: 'Use NuxtLink with superpowers.',
-          to: '/components/link',
-        },
-        {
-          label: 'Modal',
-          icon: 'i-lucide-file-text',
-          description: 'Display a modal within your application.',
-          to: '/components/modal',
-        },
-        {
-          label: 'NavigationMenu',
-          icon: 'i-lucide-file-text',
-          description: 'Display a list of links.',
-          to: '/components/navigation-menu',
-        },
-        {
-          label: 'Pagination',
-          icon: 'i-lucide-file-text',
-          description: 'Display a list of pages.',
-          to: '/components/pagination',
-        },
-        {
-          label: 'Popover',
-          icon: 'i-lucide-file-text',
-          description: 'Display a non-modal dialog that floats around a trigger element.',
-          to: '/components/popover',
-        },
-        {
-          label: 'Progress',
-          icon: 'i-lucide-file-text',
-          description: 'Show a horizontal bar to indicate task progression.',
-          to: '/components/progress',
         },
       ],
     },

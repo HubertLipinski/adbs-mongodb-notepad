@@ -4,7 +4,7 @@
 
 <template>
   <main class="flex flex-row min-h-screen">
-    <div class="flex flex-col w-sm bg-slate-100 p-6">
+    <div class="flex flex-col min-w-sm max-w-sm bg-slate-100 p-6">
       <div class="inline-flex justify-between items-center pb-4">
         <h1 class="text-xl pl-2">
           Notepad App

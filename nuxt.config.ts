@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@sidebase/nuxt-auth', '@nuxt/ui'],
+  modules: [
+    '@nuxt/eslint',
+    '@sidebase/nuxt-auth',
+    '@nuxt/ui',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+  ],
   ssr: false,
   devtools: { enabled: true },
 
@@ -40,5 +46,9 @@ export default defineNuxtConfig({
     config: {
       stylistic: true,
     },
+  },
+
+  pinia: {
+    storesDirs: ['./stores/**'],
   },
 })

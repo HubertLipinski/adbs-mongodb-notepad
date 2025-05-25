@@ -1,0 +1,55 @@
+import { model, Schema, type Document, type Types } from 'mongoose'
+
+export interface NoteDocument extends Document {
+  _id: Types.ObjectId
+  user_id: Types.ObjectId
+  title: string
+  tags: string[]
+  content: NoteContent
+  location: GeoJSON
+  createdAt: Date
+  updatedAt: Date
+}
+
+interface NoteContent {
+  time: Date
+  blocks: object[]
+}
+
+interface GeoJSON {
+  type: 'Point'
+  coordinates: [number, number] // [longitude, latitude]
+}
+
+const noteContentSchema = new Schema({
+  time: {
+    type: Date,
+    required: true,
+  },
+  blocks: {
+    type: [Object],
+    required: true,
+  },
+}, { _id: false })
+
+const GeoJSONSchema = new Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true,
+  },
+  coordinates: {
+    type: [Number],
+    required: true,
+  },
+}, { _id: false })
+
+const NoteSchema = new Schema({
+  user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+  title: { type: String, required: true, trim: true, unique: false },
+  tags: { type: [String], required: false, unique: false },
+  content: { type: noteContentSchema, required: true, _id: false, unique: false },
+  location: { type: GeoJSONSchema, required: false, _id: false, unique: false },
+}, { timestamps: true })
+
+export const Note = model<NoteDocument>('Note', NoteSchema)
