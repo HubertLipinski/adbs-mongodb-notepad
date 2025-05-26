@@ -10,7 +10,7 @@ export interface UserDocument extends Document {
 
 const UserSchema = new Schema({
   // _id: { type: Schema.Types.ObjectId, ref: 'User' },
-  username: { type: String, required: true, unique: true, trim: true, lowercase: true },
+  username: { type: String, required: true, unique: false, trim: true, lowercase: true },
   email: { type: String, unique: true, required: true, lowercase: true, trim: true },
   password: { type: String, required: true, trim: true, length: [8, 'Password must be at least 8 characters'] },
 }, { timestamps: true })

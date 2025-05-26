@@ -1,24 +1,22 @@
 <script setup lang="ts">
-// TODO: get user note content from api
-
-import type { Note } from 'esbuild'
+import type { NoteDocument } from '~/server/models/Note'
 
 const route = useRoute()
-
 const store = useNotesStore()
 const { notes } = storeToRefs(store)
 
-const userNote = notes.value.find(el => el._id === route.params.id)
-const content = toRaw(userNote.content)
+const userNote = notes.value.find((el: NoteDocument) => el._id === route.params.id)!
+const content = toRaw(userNote?.content)
 
 const keys = useMagicKeys()
-
 const toast = useToast()
-
 const isSaving = ref(false)
 async function saveNote() {
+
+  if (isSaving.value) return
+
   isSaving.value = true
-  await store.updateNote(userNote)
+  await store.updateNote(userNote as NoteDocument)
   store.$patch({})
   setTimeout(() => {
     isSaving.value = false
@@ -27,7 +25,7 @@ async function saveNote() {
       description: 'Note updated successfully.',
       icon: 'i-lucide-check',
     })
-  }, 1000)
+  }, 250)
 }
 
 onKeyStroke('s', async (e) => {
@@ -37,12 +35,12 @@ onKeyStroke('s', async (e) => {
   }
 })
 
-const items = ref(['Backlog', 'Todo', 'In Progress', 'Done'])
-const value = ref(['Backlog'])
+const items = ref<string[]>(['Backlog', 'Todo', 'In Progress', 'Done'])
+const value = ref<string[]>(['Backlog'])
 
 function onCreate(item: string) {
   items.value.push(item)
-  value.value = item
+  value.value.push(item)
 }
 </script>
 
@@ -88,7 +86,7 @@ function onCreate(item: string) {
               :items="items"
               class="w-48"
               multiple
-              @create="onCreate"
+              @create.prevent="onCreate"
             />
           </UFormField>
         </div>

@@ -4,12 +4,12 @@ export const useNotesStore = defineStore('notes', () => {
   const notes = ref<NoteDocument[]>([])
 
   async function fetchNotes() {
-    const { data } = await useFetch('/api/notes')
-    notes.value = data.value
+    const data = await $fetch<NoteDocument[]>('/api/notes')
+    notes.value = data
   }
 
   async function createNewNote() {
-    const data: NoteDocument = await $fetch(`/api/notes/create`)
+    const data = await $fetch<NoteDocument>('/api/notes/create')
 
     notes.value.push(data)
     await nextTick()
@@ -30,7 +30,6 @@ export const useNotesStore = defineStore('notes', () => {
 }, {
   persist: {
     storage: localStorage,
-    paths: ['notes'],
     key: 'notes',
   },
 })

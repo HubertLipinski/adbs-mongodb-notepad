@@ -1,8 +1,8 @@
 import { model, Schema, type Document, type Types } from 'mongoose'
 
 export interface NoteDocument extends Document {
-  _id: Types.ObjectId
-  user_id: Types.ObjectId
+  _id: Types.ObjectId | string
+  user_id: Types.ObjectId | string
   title: string
   tags: string[]
   content: NoteContent

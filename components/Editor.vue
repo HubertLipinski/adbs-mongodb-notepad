@@ -60,10 +60,9 @@ onMounted(() => {
       header: {
         class: Header,
         config: {
-          placeholder: 'Enter a header',
+          placeholder: 'Type here',
           levels: [1, 2, 3, 4, 5],
           defaultLevel: 2,
-          placeholder: 'Type here',
         },
         inlineToolbar: true,
       },
