@@ -41,15 +41,13 @@ const items = ref<NavigationMenuItem[][]>([
       icon: 'i-lucide-tags',
       slot: 'tags' as const,
       active: route.path.includes('/tags'),
+      class: 'mt-4',
       children: [
         {
           label: 'New tag',
           icon: 'i-lucide-plus',
         },
-        {
-          label: 'Custom tag',
-          icon: 'i-lucide-tag',
-        },
+        // todo user tags
       ],
     },
     {

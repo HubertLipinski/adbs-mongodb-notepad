@@ -1,23 +1,20 @@
 <script setup lang="ts">
-const { data, signOut } = useAuth()
+const { data } = useAuth()
+const store = useNotesStore()
 </script>
 
 <template>
   <section class="flex flex-col justify-center grow-1 items-center gap-16">
     <h1 class="text-3xl">
-      Welcome back, {{ data }}
+      Welcome back, {{ data?.user?.name }}
     </h1>
-
-    <UButton
-      label="Logout"
-      @click="async () => await signOut()"
-    />
 
     <UButton
       label="Button"
       class="w-48 h-48 justify-center"
       variant="outline"
       icon="i-lucide-plus"
+      @click="async () => await store.createNewNote()"
     >
       Create new note
     </UButton>

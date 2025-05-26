@@ -16,10 +16,16 @@ export const useNotesStore = defineStore('notes', () => {
     await navigateTo(`/notes/${data._id}/edit`)
   }
 
+  async function updateNote(note: NoteDocument) {
+    const data: NoteDocument = await $fetch(`/api/notes/${note._id}`, { body: note, method: 'PATCH' })
+    await fetchNotes()
+  }
+
   return {
     notes,
     fetchNotes,
     createNewNote,
+    updateNote,
   }
 }, {
   persist: {
