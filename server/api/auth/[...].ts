@@ -13,7 +13,7 @@ export default NuxtAuthHandler({
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: { email: string, password: string }) {
         const user = await User.findOne({ email: credentials.email })
         if (!user) {
           throw createError({

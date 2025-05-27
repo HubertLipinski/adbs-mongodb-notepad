@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const notes = await Note.find({
     user_id: event.context.user_id,
-  })
+  }).sort({ createdAt: -1 })
 
   return notes
 })

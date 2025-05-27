@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+navigateTo('/')
+</script>
 
 <template>
-  <h1>List of all notes</h1>
+  <div />
 </template>

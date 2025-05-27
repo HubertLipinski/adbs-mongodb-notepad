@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+const store = useNotesStore()
 </script>
 
 <template>
@@ -7,12 +7,13 @@
     <div class="flex flex-col min-w-sm max-w-sm bg-slate-100 p-6">
       <div class="inline-flex justify-between items-center pb-4">
         <h1 class="text-xl pl-2">
-          Notepad App
+          <NuxtLink to="/">Notepad App</NuxtLink>
         </h1>
         <UButton
           variant="outline"
           icon="i-lucide-plus"
           size="sm"
+          @click="async () => await store.createNewNote()"
         />
       </div>
       <Navbar />

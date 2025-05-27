@@ -1,6 +1,7 @@
 import { model, Schema, type Document, type Types } from 'mongoose'
 
 export interface UserDocument extends Document {
+  _id: Types.ObjectId | string
   username: string
   email: string
   password: string

@@ -32,15 +32,16 @@ export default defineNuxtConfig({
   auth: {
     isEnabled: true,
     globalAppMiddleware: true,
-    auth: {
-      provider: {
-        type: 'local',
-        endpoints: {
-          signIn: { path: '/login', method: 'post' },
-          signOut: { path: '/logout', method: 'post' },
-        },
-      },
+    // auth: {
+    provider: {
+      type: 'authjs',
+      addDefaultCallbackUrl: '',
+      // endpoints: {
+      //   signIn: { path: '/login', method: 'post' },
+      //   signOut: { path: '/logout', method: 'post' },
+      // },
     },
+    // },
   },
 
   eslint: {

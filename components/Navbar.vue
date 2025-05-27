@@ -24,8 +24,6 @@ const userMenu = computed(() => {
   return menu
 })
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 const items = ref<NavigationMenuItem[][]>([
   [
     {

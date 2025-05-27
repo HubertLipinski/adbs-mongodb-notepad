@@ -5,14 +5,13 @@ const route = useRoute()
 const store = useNotesStore()
 const { notes } = storeToRefs(store)
 
-const userNote = notes.value.find((el: NoteDocument) => el._id === route.params.id)!
+const noteId = ref<string>(route.params.id as string)
+const userNote = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
 const content = toRaw(userNote?.content)
 
-const keys = useMagicKeys()
 const toast = useToast()
 const isSaving = ref(false)
 async function saveNote() {
-
   if (isSaving.value) return
 
   isSaving.value = true
@@ -35,12 +34,25 @@ onKeyStroke('s', async (e) => {
   }
 })
 
-const items = ref<string[]>(['Backlog', 'Todo', 'In Progress', 'Done'])
-const value = ref<string[]>(['Backlog'])
+const items = ref<string[]>(['Backlog', 'Todo', 'In Progress', 'Done', 'Todo2', 'Todo3'])
+const noteTags = ref<string[]>([])
 
 function onCreate(item: string) {
   items.value.push(item)
-  value.value.push(item)
+  noteTags.value.push(item)
+}
+
+const isDeleting = ref(false)
+async function deleteThisNote() {
+  isDeleting.value = true
+  await store.deleteNote(noteId.value)
+  isDeleting.value = false
+  toast.add({
+    title: 'Success!',
+    description: 'Note deleted successfully.',
+    icon: 'i-lucide-check',
+  })
+  store.$patch({})
 }
 </script>
 
@@ -75,18 +87,23 @@ function onCreate(item: string) {
               trailing-icon="i-lucide-trash"
               size="lg"
               color="error"
+              :disabled="isDeleting"
+              :loading="isDeleting"
+              @click="deleteThisNote"
             />
           </div>
         </div>
-        <div class="pb-4">
+        <div class="pb-4 pl-4">
           <UFormField label="Tag">
             <UInputMenu
-              v-model="value"
-              create-item
-              :items="items"
-              class="w-48"
+              v-model="noteTags"
+              size="xl"
               multiple
-              @create.prevent="onCreate"
+              :items="items"
+              create-item
+              placeholder="Select tags"
+              class="max-w-md"
+              @create="onCreate"
             />
           </UFormField>
         </div>

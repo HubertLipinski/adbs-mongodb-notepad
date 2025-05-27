@@ -11,14 +11,27 @@ export const useNotesStore = defineStore('notes', () => {
   async function createNewNote() {
     const data = await $fetch<NoteDocument>('/api/notes/create')
 
-    notes.value.push(data)
+    notes.value.unshift(data)
     await nextTick()
     await navigateTo(`/notes/${data._id}/edit`)
   }
 
   async function updateNote(note: NoteDocument) {
-    const data: NoteDocument = await $fetch(`/api/notes/${note._id}`, { body: note, method: 'PATCH' })
+    await $fetch<NoteDocument>(`/api/notes/${note._id}`, { body: note, method: 'PATCH' })
     await fetchNotes()
+  }
+
+  async function deleteNote(id: string): Promise<void> {
+    console.log(`${id} deleted`)
+    await $fetch(`/api/notes/${id}`, { method: 'DELETE' })
+    notes.value = notes.value.filter((el: NoteDocument) => el._id !== id)
+
+    if (notes.value.length > 0) {
+      await navigateTo(`/notes/${notes.value[0]._id}/edit`)
+      return
+    }
+
+    await navigateTo(`/`)
   }
 
   return {
@@ -26,6 +39,7 @@ export const useNotesStore = defineStore('notes', () => {
     fetchNotes,
     createNewNote,
     updateNote,
+    deleteNote,
   }
 }, {
   persist: {
