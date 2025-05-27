@@ -5,7 +5,6 @@ export default defineEventHandler(async (event) => {
 
   const existingNotes = await Note.countDocuments({
     user_id: event.context.user_id,
-    title: { $regex: /^Untitled note(?: \(\d+\))?$/ },
   })
 
   const newTitle = existingNotes === 0

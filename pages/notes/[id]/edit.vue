@@ -6,7 +6,7 @@ const store = useNotesStore()
 const { notes } = storeToRefs(store)
 
 const noteId = ref<string>(route.params.id as string)
-const userNote = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
+const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
 const content = toRaw(userNote?.content)
 
 const toast = useToast()
@@ -34,12 +34,11 @@ onKeyStroke('s', async (e) => {
   }
 })
 
-const items = ref<string[]>(['Backlog', 'Todo', 'In Progress', 'Done', 'Todo2', 'Todo3'])
-const noteTags = ref<string[]>([])
+const items = ref<string[]>([...userNote.tags])
 
 function onCreate(item: string) {
   items.value.push(item)
-  noteTags.value.push(item)
+  userNote.tags.push(item)
 }
 
 const isDeleting = ref(false)
@@ -94,9 +93,9 @@ async function deleteThisNote() {
           </div>
         </div>
         <div class="pb-4 pl-4">
-          <UFormField label="Tag">
+          <UFormField label="Tags">
             <UInputMenu
-              v-model="noteTags"
+              v-model="userNote.tags"
               size="xl"
               multiple
               :items="items"
