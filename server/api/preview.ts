@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   if (!url || typeof url !== 'string') {
     return {
       success: 0,
-      error: 'Missing or invalid URL',
+      error: 'Missing or invalid URL!',
     }
   }
 
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     console.log(e)
     return {
       success: 0,
-      error: 'Could not fetch metadata',
+      error: 'Could not fetch metadata!',
     }
   }
 })
