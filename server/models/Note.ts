@@ -16,9 +16,9 @@ interface NoteContent {
   blocks: object[]
 }
 
-interface GeoJSON {
+export interface GeoJSON {
   type: 'Point'
-  coordinates: [number, number] // [longitude, latitude]
+  coordinates: [] | [number, number] // [longitude, latitude]
 }
 
 const noteContentSchema = new Schema({
@@ -49,7 +49,10 @@ const NoteSchema = new Schema({
   title: { type: String, required: true, trim: true, unique: false },
   tags: { type: [String], required: false, unique: false },
   content: { type: noteContentSchema, required: true, _id: false, unique: false },
-  location: { type: GeoJSONSchema, required: false, _id: false, unique: false },
+  location: { type: GeoJSONSchema, required: false, _id: false, unique: false, default: null },
 }, { timestamps: true })
+
+NoteSchema.index({ tags: 1 })
+NoteSchema.index({ location: '2dsphere' })
 
 export const Note = model<NoteDocument>('Note', NoteSchema)

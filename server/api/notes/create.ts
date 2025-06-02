@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
         },
       ],
     },
+    location: null,
   })
 
   return note.toObject()

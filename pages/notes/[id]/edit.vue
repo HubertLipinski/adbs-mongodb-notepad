@@ -9,6 +9,11 @@ const noteId = ref<string>(route.params.id as string)
 const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
 const content = toRaw(userNote?.content)
 
+const mapPoint = ref({
+  type: 'Point',
+  coordinates: [],
+})
+
 const toast = useToast()
 const isSaving = ref(false)
 async function saveNote() {
@@ -53,6 +58,10 @@ async function deleteThisNote() {
   })
   store.$patch({})
 }
+
+watch(mapPoint.value, (val) => {
+  userNote.location = val
+})
 </script>
 
 <template>
@@ -105,6 +114,19 @@ async function deleteThisNote() {
               @create="onCreate"
             />
           </UFormField>
+          <div class="py-2 mt-4">
+            <p class="pb-1">
+              Selected location coordinates: {{ userNote.location?.coordinates.length > 0 ? userNote.location?.coordinates : ' - ' }}
+            </p>
+            <LeafletMap
+              v-if="userNote.location === null"
+              v-model:coordinates="mapPoint.coordinates"
+            />
+            <LeafletMap
+              v-else
+              v-model:coordinates="userNote.location.coordinates"
+            />
+          </div>
         </div>
         <Editor
           :model-value="content"
