@@ -70,8 +70,6 @@ watch(mapPoint.value, (val) => {
 <template>
   <ClientOnly>
     <section class="w-full max-w-full">
-      <!-- TODO: GEOLOCATION -->
-
       <UContainer class="min-h-full gap-8">
         <div class="w-full pt-4 pb-8 flex flex-row justify-between">
           <div class="flex gap-6">
