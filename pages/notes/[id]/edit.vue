@@ -3,7 +3,7 @@ import type { NoteDocument } from '~/server/models/Note'
 
 const route = useRoute()
 const store = useNotesStore()
-const { notes } = storeToRefs(store)
+const { notes, tags } = storeToRefs(store)
 
 const noteId = ref<string>(route.params.id as string)
 const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
@@ -39,7 +39,10 @@ onKeyStroke('s', async (e) => {
   }
 })
 
-const items = ref<string[]>([...userNote.tags])
+const userTags = computed(() => {
+  return tags.value.map(el => el.name)
+})
+const items = ref<string[]>([...userTags.value])
 
 function onCreate(item: string) {
   items.value.push(item)
@@ -109,14 +112,15 @@ watch(mapPoint.value, (val) => {
               multiple
               :items="items"
               create-item
-              placeholder="Select tags"
+              placeholder="Select or create tags"
               class="max-w-md"
               @create="onCreate"
             />
           </UFormField>
           <div class="py-2 mt-4">
             <p class="pb-1">
-              Selected location coordinates: {{ userNote.location?.coordinates.length > 0 ? userNote.location?.coordinates : ' - ' }}
+              Selected location coordinates: {{ userNote.location?.coordinates.length > 0
+                ? userNote.location?.coordinates : ' - ' }}
             </p>
             <LeafletMap
               v-if="userNote.location === null"

@@ -6,9 +6,10 @@ const route = useRoute()
 const { signOut } = useAuth()
 
 const store = useNotesStore()
-const { notes } = storeToRefs(store)
+const { notes, tags } = storeToRefs(store)
 
 await store.fetchNotes()
+await store.fetchTags()
 
 const userMenu = computed(() => {
   const menu = [{
@@ -24,12 +25,28 @@ const userMenu = computed(() => {
   return menu
 })
 
+const tagsMenu = computed(() => {
+  const menu = []
+
+  tags.value.forEach(tag => menu.push({
+    label: tag.name,
+    icon: 'i-lucide-tag',
+    badge: {
+      color: 'primary',
+      label: tag.count || 0,
+    },
+    to: `/tags/${tag.name}`,
+  }))
+
+  return menu
+})
+
 const items = ref<NavigationMenuItem[][]>([
   [
     {
       label: 'My Notes',
       icon: 'i-lucide-book-open',
-      active: route.path.includes('/notes'),
+      active: computed<boolean>(() => route.fullPath.includes('notes')),
       to: '/notes',
       defaultOpen: true,
       children: userMenu,
@@ -38,15 +55,10 @@ const items = ref<NavigationMenuItem[][]>([
       label: 'Tags',
       icon: 'i-lucide-tags',
       slot: 'tags' as const,
-      active: route.path.includes('/tags'),
+      active: computed<boolean>(() => route.fullPath.includes('tags')),
       class: 'mt-4',
-      children: [
-        {
-          label: 'New tag',
-          icon: 'i-lucide-plus',
-        },
-        // todo user tags
-      ],
+      defaultOpen: true,
+      children: tagsMenu,
     },
     {
       label: 'Logout',
@@ -67,6 +79,7 @@ const items = ref<NavigationMenuItem[][]>([
 
 <template>
   <UNavigationMenu
+    :key="route.path"
     orientation="vertical"
     :items="items"
     class="data-[orientation=vertical]:w-full"
