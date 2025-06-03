@@ -44,12 +44,19 @@ const tagsMenu = computed(() => {
 const items = ref<NavigationMenuItem[][]>([
   [
     {
+      label: 'My Profile',
+      icon: 'i-lucide-user-round-cog',
+      active: computed<boolean>(() => route.fullPath.includes('profile')),
+      to: '/profile',
+    },
+    {
       label: 'My Notes',
       icon: 'i-lucide-book-open',
       active: computed<boolean>(() => route.fullPath.includes('notes')),
       to: '/notes',
       defaultOpen: true,
       children: userMenu,
+      class: 'mt-4',
     },
     {
       label: 'Tags',

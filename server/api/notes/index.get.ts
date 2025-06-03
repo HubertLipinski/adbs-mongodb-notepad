@@ -1,12 +1,15 @@
 import { Note } from '~/server/models/Note'
+import { getServerSession } from '#auth'
 
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
 
+  const session = await getServerSession(event)
+
   const { tags, title } = getQuery(event)
 
   const query: Record<string, unknown> = {
-    user_id: event.context.user_id,
+    user_id: session?.user.id,
   }
 
   if (tags) {
