@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { data } = useAuth()
 const store = useNotesStore()
+
+onMounted(() => store.$patch({}))
 </script>
 
 <template>
@@ -21,6 +23,4 @@ const store = useNotesStore()
   </section>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

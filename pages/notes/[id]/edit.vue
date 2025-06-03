@@ -9,6 +9,10 @@ const noteId = ref<string>(route.params.id as string)
 const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
 const content = toRaw(userNote?.content)
 
+if (!userNote) {
+  await navigateTo('/')
+}
+
 const mapPoint = ref({
   type: 'Point',
   coordinates: [],
