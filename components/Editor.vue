@@ -43,7 +43,6 @@ function viewToModel(_, event) {
   updatingModel = true
 
   editor.save().then((outputData) => {
-    console.log(event, 'Saving completed: ', outputData)
     emit('update:modelValue', outputData)
   }).catch((error) => {
     console.log(event, 'Saving failed: ', error)

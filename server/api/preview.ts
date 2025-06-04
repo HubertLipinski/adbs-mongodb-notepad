@@ -36,8 +36,8 @@ export default defineEventHandler(async (event) => {
       },
     }
   }
-  catch (e) {
-    console.log(e)
+  catch (error) {
+    console.error(error)
     return {
       success: 0,
       error: 'Could not fetch metadata!',

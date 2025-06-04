@@ -23,7 +23,7 @@ const connection = await connectMongoose(process.env.MONGODB_URI || '')
 await seedUsers({ amount: 50, clean })
 
 // notes per user
-await seedNotes({ notesPerUser: 15, clean })
+await seedNotes({ notesPerUser: 20, clean })
 
 await connection?.disconnect()
 console.log(`Done`)
