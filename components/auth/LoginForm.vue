@@ -59,6 +59,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput
         v-model="state.email"
         class="w-full"
+        placeholder="email@example.com"
       />
     </UFormField>
 
@@ -88,7 +89,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UButton>
 
     <div class="py-4">
-      <p>No account? <ULink to="/register">Register here</ULink></p>
+      <p>
+        No account? <ULink to="/register">Register here</ULink>
+      </p>
     </div>
   </UForm>
 </template>

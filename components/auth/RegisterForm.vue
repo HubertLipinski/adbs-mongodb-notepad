@@ -45,7 +45,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
   isLoading.value = false
 
-  if (res?.success) {
+  if (res?.username) {
     toast.add({
       title: 'Registration successful',
       description: 'You can now log in',
@@ -80,6 +80,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput
         v-model="state.username"
         class="w-full"
+        placeholder="John Doe"
       />
     </UFormField>
 
@@ -90,12 +91,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput
         v-model="state.email"
         class="w-full"
+        placeholder="email@example.com"
       />
     </UFormField>
 
     <UFormField
       label="Password"
       name="password"
+      help="At least 8 characters"
     >
       <UInput
         v-model="state.password"
@@ -124,7 +127,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UButton>
 
     <div class="py-4">
-      <p>Already have account? <ULink to="/login">Login here</ULink></p>
+      <p>
+        Already have account? <ULink to="/login">Login here</ULink>
+      </p>
     </div>
   </UForm>
 </template>
