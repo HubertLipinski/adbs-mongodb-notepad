@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
+import { z } from 'zod'
+import type { UserDocument } from '~/server/models/User'
+
+const toast = useToast()
+
+const { data } = await useFetch<UserDocument>('/api/profile')
 
 const items = [
   {
@@ -16,13 +22,102 @@ const items = [
   },
 ] satisfies TabsItem[]
 
-const state = reactive({
-  name: 'Benjamin Canac',
-  username: 'benjamincanac',
+const passwordSchema = z.object({
+  currentPassword: z.string().min(8, 'Must be at least 8 characters'),
+  newPassword: z.string().min(8, 'Must be at least 8 characters'),
+  confirmPassword: z.string().min(8, 'Must be at least 8 characters'),
+}).refine(data => data.newPassword === data.confirmPassword, {
+  message: 'Password must be identical',
+  path: ['confirmPassword'],
+})
+
+const userState = reactive({
+  name: '',
+  username: '',
+  consent: [],
+})
+
+const passwordState = reactive({
   currentPassword: '',
   newPassword: '',
   confirmPassword: '',
 })
+
+watch(() => data.value, (userData) => {
+  if (userData) {
+    userState.name = userData.name
+    userState.username = userData.username
+    userState.consent = userData.consent
+  }
+}, { immediate: true })
+
+const loadingStatus = reactive({
+  userForm: false,
+  passwordForm: false,
+})
+
+async function updateUserDetails() {
+  try {
+    loadingStatus.userForm = true
+    await $fetch('/api/profile', {
+      method: 'PATCH',
+      body: {
+        name: userState.name,
+        username: userState.username,
+        consent: userState.consent,
+      },
+    })
+
+    toast.add({ title: 'Profile has been updated!' })
+    loadingStatus.userForm = false
+  }
+  catch (err) {
+    console.error('Failed to update user:', err)
+    loadingStatus.userForm = false
+  }
+}
+
+const { signOut } = useAuth()
+const passwordError = ref('')
+async function updateUserPassword() {
+  passwordError.value = ''
+
+  try {
+    if (passwordState.newPassword !== passwordState.confirmPassword) {
+      passwordError.value = 'Passwords do not match'
+      return
+    }
+
+    loadingStatus.passwordForm = true
+
+    await $fetch('/api/profile/password', {
+      method: 'PUT',
+      body: {
+        currentPassword: passwordState.currentPassword,
+        newPassword: passwordState.newPassword,
+      },
+    })
+
+    passwordState.currentPassword = ''
+    passwordState.newPassword = ''
+    passwordState.confirmPassword = ''
+
+    loadingStatus.passwordForm = false
+
+    toast.add({ title: 'Password has been changed!', description: 'You will be automatically loged out in 3 seconds...' })
+
+    setTimeout(async () => await signOut(), 3000)
+  }
+  catch (err: unknown) {
+    passwordError.value = err?.data?.statusMessage || 'Something went wrong'
+    loadingStatus.passwordForm = false
+  }
+}
+
+const consentMap = {
+  agreement: 'I accept the terms of service',
+  marketing: 'I accept email contact for marketing purposes',
+}
 </script>
 
 <template>
@@ -39,15 +134,16 @@ const state = reactive({
         </p>
 
         <UForm
-          :state="state"
+          :state="userState"
           class="flex flex-col gap-4"
+          @submit.prevent="updateUserDetails"
         >
           <UFormField
             label="Name"
             name="name"
           >
             <UInput
-              v-model="state.name"
+              v-model="userState.name"
               class="w-full"
             />
           </UFormField>
@@ -56,8 +152,21 @@ const state = reactive({
             name="username"
           >
             <UInput
-              v-model="state.username"
+              v-model="userState.username"
               class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            v-for="consent in userState.consent"
+            :key="consent.key"
+            :name="consent.key"
+          >
+            <UCheckbox
+              v-model="consent.value"
+              color="primary"
+              :label="consentMap[consent.key]"
+              :value="1"
             />
           </UFormField>
 
@@ -65,6 +174,8 @@ const state = reactive({
             label="Update"
             type="submit"
             class="self-end"
+            :disabled="loadingStatus.userForm"
+            :loading="loadingStatus.userForm"
           />
         </UForm>
       </template>
@@ -75,16 +186,18 @@ const state = reactive({
         </p>
 
         <UForm
-          :state="state"
+          :schema="passwordSchema"
+          :state="passwordState"
           class="flex flex-col gap-4"
+          @submit.prevent="updateUserPassword"
         >
           <UFormField
             label="Current Password"
-            name="current"
+            name="currentPassword"
             required
           >
             <UInput
-              v-model="state.currentPassword"
+              v-model="passwordState.currentPassword"
               type="password"
               required
               class="w-full"
@@ -92,11 +205,11 @@ const state = reactive({
           </UFormField>
           <UFormField
             label="New Password"
-            name="new"
+            name="newPassword"
             required
           >
             <UInput
-              v-model="state.newPassword"
+              v-model="passwordState.newPassword"
               type="password"
               required
               class="w-full"
@@ -104,11 +217,11 @@ const state = reactive({
           </UFormField>
           <UFormField
             label="Confirm Password"
-            name="confirm"
+            name="confirmPassword"
             required
           >
             <UInput
-              v-model="state.confirmPassword"
+              v-model="passwordState.confirmPassword"
               type="password"
               required
               class="w-full"
@@ -119,6 +232,8 @@ const state = reactive({
             label="Change password"
             type="submit"
             class="self-end"
+            :disabled="loadingStatus.passwordForm"
+            :loading="loadingStatus.passwordForm"
           />
         </UForm>
       </template>

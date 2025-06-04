@@ -48,8 +48,8 @@ watchEffect(async () => {
         <div>
           <p>{{ note.title }}</p>
           <p class="text-xs text-muted">
-            Updated: <span>{{ new Date(note.createdAt).toLocaleDateString() }}
-              {{ new Date(note.createdAt).toLocaleTimeString() }}</span>
+            Updated: <span>{{ new Date(note.updatedAt).toLocaleDateString() }}
+              {{ new Date(note.updatedAt).toLocaleTimeString() }}</span>
           </p>
         </div>
 

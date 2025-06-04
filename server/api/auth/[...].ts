@@ -32,7 +32,7 @@ export default NuxtAuthHandler({
 
         return {
           id: user._id.toString(),
-          name: user.username,
+          name: user.name,
           email: user.email,
         }
       },

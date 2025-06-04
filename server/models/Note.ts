@@ -25,6 +25,7 @@ const noteContentSchema = new Schema({
   time: {
     type: Date,
     required: true,
+    default: Date.now(),
   },
   blocks: {
     type: [Object],
@@ -50,7 +51,7 @@ const NoteSchema = new Schema({
   tags: { type: [String], required: false, unique: false },
   content: { type: noteContentSchema, required: true, _id: false, unique: false },
   location: { type: GeoJSONSchema, required: false, _id: false, unique: false, default: null },
-}, { timestamps: true })
+}, { timestamps: true, versionKey: false })
 
 NoteSchema.index({ tags: 1 })
 NoteSchema.index({ location: '2dsphere' })
