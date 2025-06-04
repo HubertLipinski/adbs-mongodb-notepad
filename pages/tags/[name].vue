@@ -38,7 +38,7 @@ watchEffect(async () => {
 <template>
   <div
     v-if="data && data.length > 0"
-    class="flex flex-col gap-y-4"
+    class="flex flex-col gap-y-4 pb-6 pt-2"
   >
     <UCard
       v-for="note in data"

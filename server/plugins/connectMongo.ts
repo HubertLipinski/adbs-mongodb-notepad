@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import { connectMongoose } from '~/lib/mongodb'
 
 export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
@@ -10,13 +10,7 @@ export default defineNitroPlugin(async () => {
     return
   }
   try {
-    if (mongoose.connection.readyState >= 1) {
-      console.info('Mongodb already connected')
-      return
-    }
-
-    await mongoose.connect(config.mongodbUri)
-    console.info('Mongodb connected')
+    await connectMongoose(config.mongodbUri)
   }
   catch (e) {
     console.error('Mongodb connection error: ', e)
