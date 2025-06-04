@@ -4,8 +4,8 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 const schema = z.object({
   name: z.string()
-    .min(5, 'Username should be at least 5 characters long')
-    .max(20, 'Username should be no more than 20 characters'),
+    .min(5, 'Name should be at least 5 characters long')
+    .max(20, 'Name should be no more than 20 characters'),
   username: z.string()
     .min(4, 'Username should be at least 4 characters long')
     .max(20, 'Username should be no more than 20 characters'),
@@ -46,7 +46,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({
       title: 'Registration failed',
       description: err?.data?.statusMessage || 'Unknown error',
-      color: 'red',
+      color: 'error',
     })
   })
 
@@ -56,7 +56,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({
       title: 'Registration successful',
       description: 'You can now log in',
-      color: 'green',
     })
 
     await signIn('credentials', {
