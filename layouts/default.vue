@@ -16,6 +16,9 @@ const store = useNotesStore()
           @click="async () => await store.createNewNote()"
         />
       </div>
+      <div class="px-6 py-4">
+        <SearchBar />
+      </div>
       <Navbar class="p-6 pt-2" />
     </div>
     <div class="grow-1 max-h-screen overflow-y-auto">
