@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
   const db = getDb()
 
-  const { q } = getQuery(event)
+  const { q, coordinates, radius } = getQuery(event)
 
   const query: Record<string, unknown> = {
     userId: new ObjectId(session?.user.id),
@@ -20,6 +20,27 @@ export default defineEventHandler(async (event) => {
       { title: { $regex: q, $options: 'i' } },
       { tags: { $elemMatch: { $regex: q, $options: 'i' } } },
     ]
+  }
+
+  if (Array.isArray(coordinates) && coordinates.length === 2) {
+    const [lng, lat] = coordinates.map(Number)
+
+    if (
+      !isNaN(lng) && !isNaN(lat)
+      && lng >= -180 && lng <= 180
+      && lat >= -90 && lat <= 90
+    ) {
+      const distance = radius ? parseInt(radius as string) : 10000 // default 10km
+      query.location = {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+          $maxDistance: distance,
+        },
+      }
+    }
   }
 
   const notes = await db

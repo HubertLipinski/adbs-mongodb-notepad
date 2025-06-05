@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import L from 'leaflet'
+import type { HtmlHTMLAttributes } from 'vue'
+
+interface Props {
+  actionLabel?: string
+  label?: string
+  radius?: number | undefined
+  buttonClass?: HtmlHTMLAttributes['class']
+}
+
+const props = withDefaults(defineProps<Props>(), { label: 'Update', actionLabel: 'Open map', radius: undefined })
 
 const coordinatesModel = defineModel<[number, number] | []>('coordinates')
+const radiusModel = defineModel<number>('radiusModel')
 
 const map = useTemplateRef('map')
 const open = ref(false)
@@ -13,25 +24,31 @@ const myIcon = L.icon({
   iconAnchor: [12, 42],
 })
 
-const onMapReady = () => {
+const onMapReady = async () => {
+  await nextTick()
   const leaflet = map.value.leafletObject
+
+  console.log(props.radius)
 
   let marker: L.Marker | null = null
 
   if (coordinatesModel.value?.length === 2) {
-    // marker = L.marker([...coordinatesModel.value]).addTo(leaflet)
     const [lng, lat] = coordinatesModel.value
-    marker = L.marker([lat, lng], { icon: myIcon }).addTo(leaflet)
+    if (!props.radius) {
+      marker = L.marker([lat, lng], { icon: myIcon }).addTo(leaflet)
+    }
   }
 
   leaflet.on('click', (e) => {
     const { lat, lng } = e.latlng
 
-    if (marker) {
-      marker.setLatLng([lat, lng])
-    }
-    else {
-      marker = L.marker([lat, lng], { icon: myIcon }).addTo(leaflet)
+    if (!props.radius) {
+      if (marker) {
+        marker.setLatLng([lat, lng])
+      }
+      else {
+        marker = L.marker([lat, lng], { icon: myIcon }).addTo(leaflet)
+      }
     }
 
     selectedPoint.value = [lat, lng]
@@ -57,6 +74,11 @@ const getMapCenter = computed(() => {
   const [lng, lat] = coordinatesModel.value
   return [lat, lng]
 })
+
+const getKmValue = computed(() => {
+  if (!radiusModel.value) return 0
+  return Math.round(radiusModel.value / 1000)
+})
 </script>
 
 <template>
@@ -67,10 +89,29 @@ const getMapCenter = computed(() => {
     :ui="{ footer: 'justify-end' }"
   >
     <UButton
-      label="Open map"
+      :label="props.actionLabel"
       color="neutral"
       variant="subtle"
+      :class="buttonClass"
     />
+
+    <template
+      v-if="props.radius"
+      #header
+    >
+      <h2 class="flex whitespace-nowrap">
+        Select Radius:
+      </h2>
+      <div class="w-full px-6">
+        <USlider
+          v-model="radiusModel"
+          :step="10000"
+          :min="10000"
+          :max="1000000"
+        />
+      </div>
+      <span>{{ getKmValue }} km</span>
+    </template>
 
     <template #body>
       <LMap
@@ -78,10 +119,7 @@ const getMapCenter = computed(() => {
         :zoom="5"
         :center="getMapCenter"
         :use-global-leaflet="false"
-        :max-bounds="[
-          [-90, -180],
-          [90, 180],
-        ]"
+        :max-bounds="[[-90, -180], [90, 180]]"
         :max-bounds-viscosity="1"
         :world-copy-jump="false"
         :min-zoom="3"
@@ -92,6 +130,13 @@ const getMapCenter = computed(() => {
           attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
           layer-type="base"
           name="OpenStreetMap"
+        />
+
+        <LCircle
+          v-if="props.radius && selectedPoint"
+          :lat-lng="selectedPoint"
+          :radius="radiusModel"
+          :color="'red'"
         />
       </LMap>
     </template>
@@ -104,7 +149,7 @@ const getMapCenter = computed(() => {
         @click="() => open = false"
       />
       <UButton
-        label="Update"
+        :label="props.label"
         size="xl"
         @click="updateSelectedPoint"
       />

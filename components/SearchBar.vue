@@ -2,7 +2,10 @@
 const searchTerm = ref('')
 const isOpen = ref(false)
 
-const queryParams = computed(() => ({ q: searchTerm.value }))
+const coordinates = ref([])
+const radiusModel = ref(10000)
+
+const queryParams = computed(() => ({ q: searchTerm.value, coordinates: coordinates.value, radius: radiusModel.value }))
 const { data, status } = await useFetch('/api/notes/search', {
   params: queryParams,
   lazy: true,
@@ -36,6 +39,23 @@ const groups = computed(() => {
     },
   ]
 })
+
+const actionLabel = computed(() => {
+  if (coordinates.value.length === 2) {
+    return `Selected: ${radiusModel.value / 1000}km radius from (${coordinates.value[1]}, ${coordinates.value[0]})`
+  }
+
+  return 'Select location and radius'
+})
+
+watch(isOpen, (val) => {
+  if (val === false) {
+    setTimeout(() => {
+      coordinates.value = []
+      radiusModel.value = 10000
+    }, 500)
+  }
+})
 </script>
 
 <template>
@@ -50,6 +70,14 @@ const groups = computed(() => {
     />
 
     <template #content>
+      <LeafletMap
+        v-model:coordinates="coordinates"
+        v-model:radius-model.lazy="radiusModel"
+        label="Search"
+        :action-label="actionLabel"
+        :radius="10000"
+        button-class="py-4"
+      />
       <UCommandPalette
         v-model:search-term="searchTerm"
         :loading="status === 'pending'"

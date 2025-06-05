@@ -4,7 +4,7 @@ export interface NoteDocument {
   _id: ObjectId
   userId: ObjectId
   title: string
-  tags?: string[]
+  tags: string[]
   content: NoteContent
   location?: GeoJSON | null
   createdAt: Date
@@ -17,6 +17,7 @@ export interface NoteContent {
 }
 
 export interface Block {
+  id: string
   type: string
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   data: Record<string, any>
