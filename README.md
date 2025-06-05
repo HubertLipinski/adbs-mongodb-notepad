@@ -63,7 +63,7 @@ Domyślnie seeder dodaje `50` uzytkowników i `20` notatek dla kazdego użytkown
 
 ## Uruchomienie serwera
 
-Domyślnie serwer uruchomi się na adresie `http://localhost:3000`:
+Po wykonaniu poniższej komendy serwer uruchomi się na adresie `http://localhost:3000`:
 
 ```bash
 npm run dev
