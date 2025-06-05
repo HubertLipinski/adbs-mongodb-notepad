@@ -1,13 +1,15 @@
 import { faker } from '@faker-js/faker'
+import type { ObjectId } from 'mongodb'
 import { generateEditorJsContent } from './helpers/notesContent'
 import { getDb } from '~/lib/mongodb'
 
 interface Options {
   notesPerUser: number
   clean?: boolean
+  userIds: ObjectId[]
 }
 
-export async function seedNotes({ notesPerUser = 5, clean = false }: Options) {
+export async function seedNotes({ notesPerUser = 5, clean = false, userIds }: Options) {
   const db = getDb()
 
   if (clean) {
@@ -18,12 +20,11 @@ export async function seedNotes({ notesPerUser = 5, clean = false }: Options) {
   await db.collection('notes').createIndex({ tags: 1 }) // index na tablicę tagów
   await db.collection('notes').createIndex({ location: '2dsphere' }) // GeoLocation index
 
-  const users = await db.collection('users').find().toArray()
-  const notes = users.flatMap((user) => {
+  const notes = userIds.flatMap((userId) => {
     const tags = getRandomTags()
 
     return Array.from({ length: notesPerUser }).map(() => ({
-      userId: user._id,
+      userId,
       title: faker.lorem.sentence(5),
       tags: faker.helpers.arrayElements(tags, faker.number.int({ min: 2, max: 5 })),
       content: generateEditorJsContent(),

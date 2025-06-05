@@ -22,10 +22,10 @@ await connectMongoDB(process.env.MONGODB_URI || '')
 console.log(`Mongodb connected!`)
 
 // users
-await seedUsers({ amount: 50, clean })
+const userIds = await seedUsers({ amount: 50, clean })
 
 // notes per user
-await seedNotes({ notesPerUser: 20, clean })
+await seedNotes({ notesPerUser: 20, clean, userIds })
 
 await closeDb()
 

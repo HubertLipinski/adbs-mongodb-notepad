@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import bcrypt from 'bcrypt'
+import type { ObjectId } from 'mongodb'
 import { getDb } from '~/lib/mongodb'
 
 interface Options {
@@ -7,7 +8,7 @@ interface Options {
   clean?: boolean
 }
 
-export async function seedUsers({ amount = 10, clean = false }: Options): Promise<void> {
+export async function seedUsers({ amount = 10, clean = false }: Options): Promise<ObjectId[]> {
   const PASSWORD = 'zaq1@WSX'
   const db = getDb()
 
@@ -37,4 +38,6 @@ export async function seedUsers({ amount = 10, clean = false }: Options): Promis
   const result = await db.collection('users').insertMany(usersData)
 
   console.log(`Created ${result.insertedCount} new users`)
+
+  return Object.values(result.insertedIds)
 }
