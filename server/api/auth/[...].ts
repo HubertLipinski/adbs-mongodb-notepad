@@ -6,7 +6,7 @@ import { User } from '~/server/models/User'
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret || 'my-auth-secret',
   providers: [
-    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
+    // @ts-expect-error .default for SSR
     CredentialsProvider.default({
       name: 'credentials',
       credentials: {
