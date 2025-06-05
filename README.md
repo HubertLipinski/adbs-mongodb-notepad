@@ -7,7 +7,7 @@ Licencja: MIT
 
 ## Funkcjonalności
 - Tworzenie edycja i zarządzanie notatkami.
-- Wyszukiwanie notatek po tytule i tagach.
+- Wyszukiwanie notatek po tytule, tagach i geolokalizacji (w promieniu x kilometrów).
 - Logowanie, rejestracja i zarządzanie kontem.
 - Wybór lokalizacji na mapie z obsługą współrzędnych.
 - Przechowywanie danych w MongoDB z indeksami dla tagów i lokalizacji.
