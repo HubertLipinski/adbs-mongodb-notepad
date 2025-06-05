@@ -38,7 +38,7 @@ cp .env.example .env
 
 - `MONGODB_URI=''` - adres połączenia z MongoDB
 - `MONGODB_DEFAULT_COLLECTION='notepad_data'` - nazwa kolekcji w której znajdują się nasze dane
-- `AUTH_ORIGIN='http://localhost:<PORT>/api/auth'` jeśli aplikacja została uruchomiona na innym porcie niż domyślny
+- `AUTH_ORIGIN='http://localhost:<PORT>/api/auth'` - należy zmienić `<PORT>` jeśli aplikacja została uruchomiona na innym porcie niż domyślny
 
 <br/>
 
