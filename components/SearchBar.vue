@@ -16,7 +16,8 @@ const groups = computed(() => {
     {
       id: 'notes',
       label: searchTerm.value ? `Notes matching “${searchTerm.value}”...` : 'Notes',
-      items: notes.map((note: unknown) => ({
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      items: notes.map((note: any) => ({
         id: note._id,
         label: note.title || '(Untitled)',
         to: `/notes/${note._id}/edit`,

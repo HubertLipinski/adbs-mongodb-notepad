@@ -27,7 +27,7 @@ export const useNotesStore = defineStore('notes', () => {
   async function deleteNote(id: string, redirect: boolean = true): Promise<void> {
     console.log(`${id} deleted`)
     await $fetch(`/api/notes/${id}`, { method: 'DELETE' })
-    notes.value = notes.value.filter((el: NoteDocument) => el._id !== id)
+    notes.value = notes.value.filter((el: NoteDocument) => el._id.toString() !== id)
 
     await fetchTags()
 

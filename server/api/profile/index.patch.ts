@@ -1,4 +1,5 @@
-import { User } from '~/server/models/User'
+import { ObjectId } from 'mongodb'
+import { getDb } from '~/lib/mongodb'
 import { getServerSession } from '#auth'
 
 export default defineEventHandler(async (event) => {
@@ -11,15 +12,24 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid data' })
   }
 
-  await User.findByIdAndUpdate(
-    session?.user.id,
+  const db = getDb()
+  const userId = new ObjectId(session?.user.id)
+
+  const updateResult = await db.collection('users').updateOne(
+    { _id: userId },
     {
-      name: body.name,
-      username: body.username,
-      consent: body.consent,
+      $set: {
+        name: body.name,
+        username: body.username,
+        consent: body.consent,
+        updatedAt: new Date(),
+      },
     },
-    { new: true },
   )
+
+  if (updateResult.matchedCount === 0) {
+    throw createError({ statusCode: 404, statusMessage: 'User not found' })
+  }
 
   return {
     status: 200,

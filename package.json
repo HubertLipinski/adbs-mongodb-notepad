@@ -38,7 +38,7 @@
     "metascraper-description": "^5.46.15",
     "metascraper-image": "^5.46.15",
     "metascraper-title": "^5.46.15",
-    "mongoose": "^8.14.1",
+    "mongodb": "^6.17.0",
     "next-auth": "^4.21.1",
     "nuxt": "^3.17.1",
     "pinia": "^3.0.2",
@@ -49,6 +49,7 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2"
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.15.29"
   }
 }

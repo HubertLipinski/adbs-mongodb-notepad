@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { NoteDocument } from '~/server/models/Note'
+import type { Block, NoteContent } from '~/server/models/Note'
 
 const editorBlocks = [
   () => ({
@@ -87,8 +87,8 @@ const editorBlocks = [
   }),
 ]
 
-export function generateEditorJsContent(): NoteDocument['content'] {
-  const blocks = [
+export function generateEditorJsContent(): NoteContent {
+  const blocks: Block[] = [
     {
       type: 'header',
       data: {

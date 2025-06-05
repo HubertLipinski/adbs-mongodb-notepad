@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { seedUsers } from './users.seeder'
 import { seedNotes } from './notes.seeder'
-import { connectMongoose } from '~/lib/mongodb'
+import { connectMongoDB, closeDb } from '~/lib/mongodb'
 
 dotenv.config()
 
@@ -16,8 +16,10 @@ if (!process.env.MONGODB_URI) {
 }
 
 console.log(`Running database seeders ${clean ? '(with --clean option)' : ''}`)
+
 console.log(`Connecting to DB...`)
-const connection = await connectMongoose(process.env.MONGODB_URI || '')
+await connectMongoDB(process.env.MONGODB_URI || '')
+console.log(`Mongodb connected!`)
 
 // users
 await seedUsers({ amount: 50, clean })
@@ -25,6 +27,7 @@ await seedUsers({ amount: 50, clean })
 // notes per user
 await seedNotes({ notesPerUser: 20, clean })
 
-await connection?.disconnect()
+await closeDb()
+
 console.log(`Done`)
 process.exit(0)

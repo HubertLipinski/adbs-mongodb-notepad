@@ -1,7 +1,7 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 import { NuxtAuthHandler } from '#auth'
-import { User } from '~/server/models/User'
+import { getDb } from '~/lib/mongodb'
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret || 'my-auth-secret',
@@ -14,7 +14,9 @@ export default NuxtAuthHandler({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials: { email: string, password: string }) {
-        const user = await User.findOne({ email: credentials.email })
+        const db = getDb()
+        const user = await db.collection('users').findOne({ email: credentials.email })
+
         if (!user) {
           throw createError({
             statusCode: 401,

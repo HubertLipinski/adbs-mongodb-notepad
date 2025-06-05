@@ -12,13 +12,17 @@ const scraper = metascraper([
 ])
 
 export default defineEventHandler(async (event) => {
-  const { url } = getQuery(event)
+  let { url } = getQuery(event)
 
   if (!url || typeof url !== 'string') {
     return {
       success: 0,
       error: 'Missing or invalid URL!',
     }
+  }
+
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`
   }
 
   try {

@@ -1,20 +1,28 @@
-import mongoose from 'mongoose'
+import type { Db } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
-export async function connectMongoose(uri: string) {
-  if (mongoose.connection.readyState >= 1) {
-    console.info('Mongodb already connected!')
-    return
+let client: MongoClient
+let db: Db
+
+export async function connectMongoDB(uri: string) {
+  if (!client) {
+    client = new MongoClient(uri)
+    await client.connect()
+    db = client.db()
   }
+}
 
-  await mongoose.connect(uri)
-  console.info('Mongodb connected!')
-
-  return {
-    disconnect: async () => {
-      if (mongoose.connection.readyState !== 0) {
-        await mongoose.disconnect()
-        console.info('Mongodb disconnected')
-      }
-    },
+export function getDb(): Db {
+  if (!db) {
+    throw new Error('Mongodb not connected!')
   }
+  return db
+}
+
+export async function closeDb(): Promise<void> {
+  if (!client) {
+    throw new Error('Mongodb client does not exist!')
+  }
+  console.log('Closing DB connection...')
+  await client.close()
 }

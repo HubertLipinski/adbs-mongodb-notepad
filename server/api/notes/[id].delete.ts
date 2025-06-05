@@ -1,12 +1,18 @@
-import { Note } from '~/server/models/Note'
+import { ObjectId } from 'mongodb'
+import { getDb } from '~/lib/mongodb'
 
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
 
-  const id = event.context.params?.id
-  const user_id = event.context.user_id
+  const db = getDb()
 
-  const deleted = await Note.deleteOne({ _id: id, user_id })
+  const id = event.context.params?.id
+  const userId: string = event.context.userId
+
+  const deleted = await db.collection('notes').deleteOne({
+    _id: new ObjectId(id),
+    userId: new ObjectId(userId),
+  })
 
   return {
     id,

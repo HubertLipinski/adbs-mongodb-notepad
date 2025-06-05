@@ -42,7 +42,7 @@ watchEffect(async () => {
   >
     <UCard
       v-for="note in data"
-      :key="note._id as string"
+      :key="note._id.toString()"
     >
       <div class="flex w-full items-center justify-between">
         <div>
@@ -58,12 +58,12 @@ watchEffect(async () => {
             trailing-icon="i-lucide-trash"
             size="md"
             color="error"
-            @click="deleteNote(note._id as string)"
+            @click="deleteNote(note._id.toString())"
           />
           <UButton
             trailing-icon="i-lucide-arrow-right"
             size="md"
-            @click="editNote(note._id as string)"
+            @click="editNote(note._id.toString())"
           >
             Edit
           </UButton>

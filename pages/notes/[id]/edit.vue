@@ -6,7 +6,7 @@ const store = useNotesStore()
 const { notes, tags } = storeToRefs(store)
 
 const noteId = ref<string>(route.params.id as string)
-const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id === noteId.value)!
+const userNote: NoteDocument = notes.value.find((el: NoteDocument) => el._id.toString() === noteId.value)!
 const content = toRaw(userNote?.content)
 
 if (!userNote) {
@@ -69,6 +69,15 @@ async function deleteThisNote() {
 watch(mapPoint.value, (val) => {
   userNote.location = val
 })
+
+const userCoordinatesDisplay = computed(() => {
+  if (!userNote) return ''
+
+  if (userNote.location?.coordinates.length > 0)
+    return `(${userNote.location.coordinates[1]}, ${userNote.location.coordinates[0]})`
+
+  return ''
+})
 </script>
 
 <template>
@@ -122,7 +131,7 @@ watch(mapPoint.value, (val) => {
           <div class="py-2 mt-4">
             <p class="pb-1">
               Selected location coordinates: {{ userNote.location?.coordinates.length > 0
-                ? userNote.location?.coordinates : ' - ' }}
+                ? userCoordinatesDisplay : ' - ' }}
             </p>
             <LeafletMap
               v-if="userNote.location === null"

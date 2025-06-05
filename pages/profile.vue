@@ -34,7 +34,7 @@ const passwordSchema = z.object({
 const userState = reactive({
   name: '',
   username: '',
-  consent: [],
+  consent: [] as UserDocument['consent'],
 })
 
 const passwordState = reactive({

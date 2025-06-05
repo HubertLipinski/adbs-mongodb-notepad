@@ -1,13 +1,19 @@
 import { getQuery } from 'h3'
-import { Note } from '~/server/models/Note'
+import { ObjectId } from 'mongodb'
+import { getDb } from '~/lib/mongodb'
+import { getServerSession } from '#auth'
 
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
 
-  const { q } = getQuery(event)
-  const userId = event.context.user_id
+  const session = await getServerSession(event)
+  const db = getDb()
 
-  const query: Record<string, unknown> = { user_id: userId }
+  const { q } = getQuery(event)
+
+  const query: Record<string, unknown> = {
+    userId: new ObjectId(session?.user.id),
+  }
 
   if (q && typeof q === 'string') {
     query.$or = [
@@ -16,7 +22,11 @@ export default defineEventHandler(async (event) => {
     ]
   }
 
-  const notes = await Note.find(query).sort({ createdAt: -1 })
+  const notes = await db
+    .collection('notes')
+    .find(query)
+    .sort({ createdAt: -1 })
+    .toArray()
 
   const tagSet = new Set<string>()
   for (const note of notes) {

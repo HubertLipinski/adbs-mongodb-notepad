@@ -11,5 +11,5 @@ export default async function authMiddleware(event: H3Event<EventHandlerRequest>
     })
   }
 
-  event.context.user_id = session.user.id
+  event.context.userId = session.user.id
 }

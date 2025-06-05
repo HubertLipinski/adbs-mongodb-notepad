@@ -1,15 +1,18 @@
-import { Note } from '~/server/models/Note'
+import { ObjectId } from 'mongodb'
 import { getServerSession } from '#auth'
+import { getDb } from '~/lib/mongodb'
 
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
 
   const session = await getServerSession(event)
 
+  const db = getDb()
+
   const { tags, title } = getQuery(event)
 
   const query: Record<string, unknown> = {
-    user_id: session?.user.id,
+    userId: new ObjectId(session?.user.id),
   }
 
   if (tags) {
@@ -26,7 +29,11 @@ export default defineEventHandler(async (event) => {
     query.title = { $regex: title, $options: 'i' }
   }
 
-  const notes = await Note.find(query).sort({ createdAt: -1 })
+  const notes = await db
+    .collection('notes')
+    .find(query)
+    .sort({ createdAt: -1 })
+    .toArray()
 
   return notes
 })
