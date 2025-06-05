@@ -45,6 +45,20 @@ cp .env.example .env
 
 <br/>
 
+## Seeder Bazy danych
+
+Po konfiguracji zmiennych środowiskowych możemy zassedować bazę danych:
+
+```bash
+# Destrukcyjne - usuwamy wszystkie dane z kolekcji (fresh seed)
+npm run db:seed:fresh
+
+# Niedestrukcyjne - dodajemy nowe dane do bazy
+npm run db:seed
+```
+
+Domyślnie seeder dodaje `50` uzytkowników i `20` notatek dla kazdego użytkownika. Parametry mozna zmienić w pliku `server/seeders/index.ts`
+
 ## Uruchomienie serwera
 
 Domyślnie serwer uruchomi się na adresie `http://localhost:3000`:
