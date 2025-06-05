@@ -1,6 +1,6 @@
 # ADBS MongoDB Notepad
 
-Projekt realizowany na potrzeby przedmiotu Advanced Database Systems 2025 - Merito
+Projekt realizowany na potrzeby przedmiotu Advanced Database Systems 2025 - Uniwersytet Merito
 
 Autor: Hubert Lipiński <br/>
 Licencja: MIT
