@@ -12,6 +12,8 @@ Licencja: MIT
 - Wybór lokalizacji na mapie z obsługą współrzędnych.
 - Przechowywanie danych w MongoDB z indeksami dla tagów i lokalizacji.
 
+### Link do demo: [https://adbs-mongodb-notepad.vercel.app](https://adbs-mongodb-notepad.vercel.app)
+
 ## Setup
 
 ### Wymagania:
