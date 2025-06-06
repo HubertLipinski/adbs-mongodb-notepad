@@ -18,7 +18,7 @@ export async function seedNotes({ notesPerUser = 5, clean = false, userIds }: Op
   }
 
   await db.collection('notes').createIndex({ tags: 1 }) // index na tablicę tagów
-  await db.collection('notes').createIndex({ location: '2dsphere' }) // GeoLocation index
+  await db.collection('notes').createIndex({ location: '2dsphere' }) // geospatial index
 
   const notes = userIds.flatMap((userId) => {
     const tags = getRandomTags()

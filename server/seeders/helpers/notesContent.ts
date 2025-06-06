@@ -90,6 +90,7 @@ const editorBlocks = [
 export function generateEditorJsContent(): NoteContent {
   const blocks: Block[] = [
     {
+      id: faker.string.nanoid(),
       type: 'header',
       data: {
         text: faker.lorem.words(3),
@@ -97,6 +98,7 @@ export function generateEditorJsContent(): NoteContent {
       },
     },
     {
+      id: faker.string.nanoid(),
       type: 'paragraph',
       data: {
         text: faker.lorem.paragraph(),
