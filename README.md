@@ -58,7 +58,7 @@ npm run db:seed:fresh
 # Niedestrukcyjne - dodajemy nowe dane do bazy
 npm run db:seed
 ```
-
+Hasło dla seedwoanych użytkowników to domyślnie `zaq1@WSX`
 Domyślnie seeder dodaje `50` uzytkowników i `20` notatek dla kazdego użytkownika. Parametry mozna zmienić w pliku `server/seeders/index.ts`
 
 ## Uruchomienie serwera
